@@ -1,28 +1,13 @@
-import datetime
-from typing import Annotated
-
 import uvicorn
-from fastapi import Depends, FastAPI
-from fastapi.responses import FileResponse
+from fastapi import Depends, FastAPI, Query
 
-from src.models import HotelData, SBooking
+from src.bookings.routers import router as router_booking
+from src.users.router import router as router_register
 
 app = FastAPI()
 
-
-@app.get("/")
-async def home():
-    return {"message": "Крутецкий Сайтец"}
-
-
-@app.get("/hotels")
-async def get_hotels(query_args: HotelData = Depends()):
-    return query_args
-
-
-@app.post("/bookings", response_model=SBooking)
-def add_booking(data: SBooking):
-    return data
+app.include_router(router_register)
+app.include_router(router_booking)
 
 
 if __name__ == "__main__":

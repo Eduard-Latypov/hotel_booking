@@ -16,8 +16,5 @@ class Rooms(Base):
     quantity: Mapped[int]
     image_id: Mapped[int]
 
-    hotels: Mapped["Hotels"] = relationship(back_populates="rooms")
-    booking: Mapped[list["Bookings"]] = relationship(back_populates="room")
-
     def __str__(self):
         return f"Номер {self.name}"
