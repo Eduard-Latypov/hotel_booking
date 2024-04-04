@@ -9,6 +9,6 @@ class SRooms(BaseModel):
     price: int
     services: list[str]
     quantity: int
-    image_d: int
+    image_id: int
 
     model_config = ConfigDict(from_attributes=True)

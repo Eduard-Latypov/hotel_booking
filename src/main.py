@@ -1,12 +1,14 @@
 import uvicorn
 from fastapi import Depends, FastAPI, Query
 
-from src.bookings.routers import router as router_booking
 from src.users.router import router as router_register
+from src.hotels.rooms.router import router as hotel_room_router
+from src.bookings.router import router as router_booking
 
 app = FastAPI()
 
 app.include_router(router_register)
+app.include_router(hotel_room_router)
 app.include_router(router_booking)
 
 

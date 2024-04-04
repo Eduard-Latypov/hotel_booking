@@ -11,6 +11,6 @@ class SUsers(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-class SUserRegister(BaseModel):
+class SUserAuth(BaseModel):
     email: EmailStr
     password: Annotated[str, Body(min_length=8)]

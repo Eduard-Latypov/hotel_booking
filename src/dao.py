@@ -9,9 +9,9 @@ class BaseDAO:
     model: Type[Base]
 
     @classmethod
-    async def get_all(cls) -> list[Mapping[str, Any]]:
+    async def get_all(cls, **filter_by) -> list[Mapping[str, Any]]:
         async with async_session() as conn:
-            stmt = select(cls.model.__table__.columns)
+            stmt = select(cls.model.__table__.columns).filter_by(**filter_by)
             result = await conn.execute(stmt)
             return result.mappings().all()
 
@@ -35,4 +35,13 @@ class BaseDAO:
             stmt = insert(cls.model).values(**data)
             result = await conn.execute(stmt.returning(cls.model.id))
             await conn.commit()
-            return result
+            return result.mappings().one()
+
+    @classmethod
+    async def delete_record(cls, **filter_by):
+        async with async_session() as conn:
+            stmt = delete(cls.model).filter_by(**filter_by).returning(cls.model.id)
+            result = await conn.execute(stmt)
+            ids = result.mappings().one()
+            await conn.commit()
+            return ids
