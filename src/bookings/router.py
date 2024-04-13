@@ -1,7 +1,7 @@
 import datetime
 from typing import Any
 
-from fastapi import APIRouter, Request, HTTPException, status, Depends
+from fastapi import APIRouter, Request, HTTPException, status, Depends, BackgroundTasks
 from sqlalchemy import select
 from sqlalchemy.exc import NoResultFound
 
@@ -9,6 +9,7 @@ from src.bookings.schemas import SBookings
 from src.database import async_session
 
 from src.users.dependencies import get_current_user
+from src.celery_app.tasks import send_booking_confirmation_email
 
 
 from .dao import BookingsDAO
@@ -34,6 +35,7 @@ async def add_booking(
     result = await BookingsDAO.add(user_id, room_id, date_from, date_to)
     if result is None:
         raise EmptyForBooking()
+    send_booking_confirmation_email.delay(dict(result))
     return result
 
 

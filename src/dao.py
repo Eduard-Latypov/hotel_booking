@@ -33,9 +33,9 @@ class BaseDAO:
     async def add(cls, **data):
         async with async_session() as conn:
             stmt = insert(cls.model).values(**data)
-            result = await conn.execute(stmt.returning(cls.model.id))
+            result = await conn.execute(stmt.returning(cls.model.__table__.columns))
             await conn.commit()
-            return result.mappings().one()
+            return result.mappings().one_or_none()
 
     @classmethod
     async def delete_record(cls, **filter_by):

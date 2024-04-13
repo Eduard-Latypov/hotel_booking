@@ -1,4 +1,7 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Response, Depends
+from fastapi.security import OAuth2PasswordRequestForm
 
 from src.users.auth import get_password_hash, authenticate, create_access_token
 
@@ -23,16 +26,23 @@ async def register(user_data: SUserAuth):
 
 
 @router.post("/login")
-async def user_login(response: Response, user_data: SUserAuth):
-    user = await authenticate(user_data.email, user_data.password)
+async def login(user_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
+    user = await authenticate(user_data.username, user_data.password)
     if not user:
         raise InvalidEmailOrLogin()
     access_token = create_access_token({"sub": str(user["id"])})
-    response.set_cookie("access_token", access_token, httponly=True)
-    return {
-        "message": "Congratulation, you are is authenticated",
-        "access_token": access_token,
-    }
+    data = {"access_token": access_token, "token_type": "Bearer"}
+    return data
+
+
+# @router.post("/login")
+# async def user_login(response: Response, user_data: SUserAuth):
+#     user = await authenticate(user_data.email, user_data.password)
+#     if not user:
+#         raise InvalidEmailOrLogin()
+#     access_token = create_access_token({"sub": str(user["id"])})
+#     response.set_cookie("access_token", access_token, httponly=True)
+#     return access_token
 
 
 @router.get("/users", response_model=SUsers)

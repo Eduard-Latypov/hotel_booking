@@ -22,5 +22,5 @@ def get_current_user(token: str = Depends(get_token)) -> int:
             token, key=settings.SECRET_KEY, algorithms=settings.ALGORITHM
         )
     except (jwt.DecodeError, jwt.ExpiredSignatureError):
-        raise InvalidOrEmptyTokenException
+        raise InvalidOrEmptyTokenException()
     return int(payload["sub"])

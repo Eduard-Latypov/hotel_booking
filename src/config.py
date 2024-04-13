@@ -13,6 +13,11 @@ class Settings(BaseSettings):
     DB_PASSWORD: str
     SECRET_KEY: str
     ALGORITHM: str
+    REDIS_HOST: str
+    REDIS_PORT: int
+    EMAIL_HOST: str
+    EMAIL_USER: str
+    EMAIL_PASS: str
 
     @property
     def DATABASE_URL(self):

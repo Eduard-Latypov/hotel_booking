@@ -5,7 +5,7 @@ from sqlalchemy.orm import DeclarativeBase, sessionmaker
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
 
-from config import settings
+from .config import settings
 
 # env_path = Path(__file__).parent.parent / ".env"
 #
